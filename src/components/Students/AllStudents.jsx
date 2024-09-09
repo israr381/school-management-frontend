@@ -1,8 +1,3 @@
-
-
-
-
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import 'tailwindcss/tailwind.css';
@@ -18,7 +13,7 @@ const ParentsData = () => {
     const fetchStudents = async () => {
       try {
         const response = await axios.get('http://localhost:5000/students');
-        // Ensure the response is an array
+        console.log(response);
         if (Array.isArray(response.data.user)) {
           setStudents(response.data.user);
         } else {
@@ -79,14 +74,14 @@ const ParentsData = () => {
               <tbody>
                 {students.map((student, index) => (
                   <tr key={index}>
-                  <td className="py-2 px-4 relative left-2 border-b">{student.id}</td>
-                  <td className="py-2 px-4 relative left-8 border-b">{student.Name}</td>
-                  <td className="py-2 px-4 relative left-7 border-b">{student.Gender}</td>
-                  <td className="py-2 px-4 relative left-6 border-b">{student.Class}</td>
-                  <td className="py-2 px-4 relative left-14 border-b">{student.parent.FatherName}</td>
-                  <td className="py-2 px-4 relative left-8 border-b">{student.Address}</td>
-                  <td className="py-2 px-4 relative left-11 border-b">{student.DateOfBirth}</td>
-                  <td className="py-2 px-4 relative left-5 border-b">{student.parent.PhoneNumber}</td>
+                  <td className="py-6 px-4 relative left-5 border-b">{student.id}</td>
+                  <td className="py-2 px-4 relative left-8 border-b">{student.name}</td>
+                  <td className="py-2 px-4 relative left-9 border-b">{student.gender}</td>
+                  <td className="py-2 px-4 relative left-7 border-b">{student.class}</td>
+                  <td className="py-2 px-4 relative left-14 border-b">{student.parent.fatherName}</td>
+                  <td className="py-2 px-4 relative left-10 border-b">{student.parent.address}</td>
+                  <td className="py-2 px-4 relative left-14 border-b">{student.dateOfBirth}</td>
+                  <td className="py-2 px-4 relative left-9 border-b">{student.parent.phoneNumber}</td>
                 </tr>
                 ))}
               </tbody>

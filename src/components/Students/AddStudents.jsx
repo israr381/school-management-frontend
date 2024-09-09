@@ -47,38 +47,51 @@ const StudentForm = () => {
         fatherName: formData.fatherName,
         motherName: formData.motherName,
         email: formData.email,
-        phone: formData.phone,
+        phoneNumber: formData.phone,
         fatherOccupation: formData.fatherOccupation,
         address: formData.address,
         religion: formData.parentReligion,
       });
 
-      const parentId = parentResponse.data.id;
+      console.log(parentResponse);
+
+      const parentId = parentResponse.data.parent.id;
+
+      console.log(parentId , "Here");
 
       // Create student
-      const studentData = new FormData();
-      studentData.append('name', formData.studentName);
-      studentData.append('gender', formData.gender);
-      studentData.append('class', formData.studentClass);
-      studentData.append('dateOfBirth', formData.dateOfBirth);
-      studentData.append('bloodGroup', formData.bloodGroup);
-      studentData.append('religion', formData.studentReligion);
-      studentData.append('admissionDate', formData.admissionDate);
-      studentData.append('parentId', parentId);
-      if (formData.studentPhoto) {
-        studentData.append('studentPhoto', formData.studentPhoto);
-      }
+      // const studentData = new FormData();
+      // studentData.append('name', formData.studentName);
+      // studentData.append('gender', formData.gender);
+      // studentData.append('class', formData.studentClass);
+      // studentData.append('dateOfBirth', formData.dateOfBirth);
+      // studentData.append('bloodGroup', formData.bloodGroup);
+      // studentData.append('religion', formData.studentReligion);
+      // studentData.append('admissionDate', formData.admissionDate);
+      // studentData.append('parentId', parentId);
 
-      await axios.post('http://localhost:5000/students/create', studentData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+    
+      // if (formData.studentPhoto) {
+      //   studentData.append('studentPhoto', formData.studentPhoto);
+      // }
+
+      await axios.post('http://localhost:5000/students/create',{
+        name : formData.studentName,
+        gender : formData.gender,
+        class:formData.studentClass,
+        dateOfBirth: formData.dateOfBirth,
+        bloodGroup:formData.bloodGroup,
+        religion : formData.studentReligion,
+        admissionDate:formData.admissionDate,
+        parentId:parentId
+
       });
 
       setIsLoading(false);
       alert('Student and parent created successfully');
     } catch (error) {
-      setIsLoading(false);
+      console.log(error);
+      // setIsLoading(false);
       setError('Failed to create student and parent. Please try again.');
     }
   };

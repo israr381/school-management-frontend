@@ -1,8 +1,3 @@
-
-
-
-
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import 'tailwindcss/tailwind.css';
@@ -12,6 +7,8 @@ import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 
 const StudentsData = () => {
   const [parents, setParents] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(5);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -19,7 +16,6 @@ const StudentsData = () => {
       try {
         const response = await axios.get('http://localhost:5000/parents/FindAll');
         console.log(response)
-        // Ensure the response is an array
         if (Array.isArray(response.data.user)) {
           setParents(response.data.user);
         } else {
@@ -33,6 +29,13 @@ const StudentsData = () => {
 
     fetchStudents();
   }, []);
+
+  // Calculate the indices for the current page
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = parents.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(parents.length / itemsPerPage);
 
   return (
     <div className=" bg-gray-100">
@@ -70,35 +73,55 @@ const StudentsData = () => {
                   <th className="py-2 px-4 border-b">ID</th>
                   <th className="py-2 px-4 border-b">Name</th>
                   <th className="py-2 px-4 border-b">Religion</th>
-                  <th className="py-2 px-4 border-b">Occuption</th>
+                  <th className="py-2 px-4 border-b">Occupation</th>
                   <th className="py-2 px-4 border-b">Address</th>
                   <th className="py-2 px-4 border-b">Email</th>
                   <th className="py-2 px-4 border-b">Phone</th>
                 </tr>
               </thead>
               <tbody>
-                {parents.map((parents, index) => (
+                {currentItems.map((parents, index) => (
                   <tr key={index} className=''>
-                  <td className="py-4 px-4 relative left-4 border-b">{parents.id}</td>
-                  <td className="py-2 px-4 relative left-20 border-b">{parents.FatherName}</td>
-                  <td className="py-2 px-4 relative left-10 border-b">{parents.Religion}</td>
-                  <td className="py-2 px-4 relative left-12 border-b">{parents.FatherOccupation}</td>
-                  <td className="py-2 px-4 relative left-10 border-b">{parents.Address}</td>
-                  <td className="py-2 px-4 relative left-16 border-b">{parents.email}</td>
-                  <td className="py-2 px-4 relative left-8 border-b">{parents.PhoneNumber}</td>
-                </tr>
+                    <td className="py-4 px-4 relative left-4 border-b">{parents.id}</td>
+                    <td className="py-2 px-4 relative left-12 border-b">{parents.fatherName}</td>
+                    <td className="py-2 px-4 relative left-10 border-b">{parents.religion}</td>
+                    <td className="py-2 px-4 relative left-12 border-b">{parents.fatherOccupation}</td>
+                    <td className="py-2 px-4 relative left-10 border-b">{parents.address}</td>
+                    <td className="py-2 px-4 relative left-24 border-b">{parents.email}</td>
+                    <td className="py-2 px-4 relative left-8 border-b">{parents.phoneNumber}</td>
+                  </tr>
                 ))}
               </tbody>
             </table>
           )}
           <div className="flex justify-end items-center mt-4">
-            <button className="py-2 px-4 border rounded-lg">Previous</button>
-            <div>
-              <button className="py-2 px-4 border rounded-lg mx-1">1</button>
-              <button className="py-2 px-4 border rounded-lg mx-1">2</button>
-              <button className="py-2 px-4 border rounded-lg mx-1">3</button>
+            <button
+              className="py-2 px-4 border rounded-lg"
+              onClick={() => setCurrentPage(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </button>
+            <div className="mx-2">
+              {Array.from({ length: totalPages }, (_, i) => (
+                <button
+                  key={i}
+                  className={`py-2 px-4 border rounded-lg mx-1 ${
+                    currentPage === i + 1 ? 'bg-red-600 text-white' : ''
+                  }`}
+                  onClick={() => setCurrentPage(i + 1)}
+                >
+                  {i + 1}
+                </button>
+              ))}
             </div>
-            <button className="py-2 px-4 border rounded-lg">Next</button>
+            <button
+              className="py-2 px-4 border rounded-lg"
+              onClick={() => setCurrentPage(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </button>
           </div>
         </div>
       </main>

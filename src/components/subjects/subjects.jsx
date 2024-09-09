@@ -11,26 +11,26 @@ import Header from '../Header/Header';
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 
 const SubjectComponent = () => {
-  const [students, setStudents] = useState([]);
+  const [subjects, setSubjects] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchStudents = async () => {
+    const fetchSubjects = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/students');
+        const response = await axios.get('http://localhost:5000/subjects/find-all');
         // Ensure the response is an array
-        if (Array.isArray(response.data.user)) {
-          setStudents(response.data.user);
+        if (Array.isArray(response.data)) {
+          setSubjects(response.data);
         } else {
           setError('Invalid data format');
         }
       } catch (error) {
-        console.error("Error fetching students data: ", error);
-        setError('Error fetching students data');
+        console.error("Error fetching subjects data: ", error);
+        setError('Error fetching subjects data');
       }
     };
 
-    fetchStudents();
+    fetchSubjects();
   }, []);
 
   return (
@@ -64,48 +64,31 @@ const SubjectComponent = () => {
             <div className="text-red-500">{error}</div>
           ) : (
             <table className="mt-6 w-full text-left border-collapse">
-  <thead>
-    <tr className='text-red-500 text-xl'>
-      <th className="border-t border-b border-l p-2 pb-6 text-center">Subject Name</th>
-      <th className="border-t border-b p-2 pb-6 text-center">Teacher</th>
-      <th className="border-t border-b p-2 pb-6 text-center">Classes</th>
-      <th className="border-t border-b border-r p-2 pb-6 text-center">Days</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr className="hover:bg-gray-100">
-      <td className="border-t border-b border-l p-2 text-center align-middle">English</td>
-      <td className="border-t border-b p-2 text-center align-middle">Ali Hussain</td>
-      <td className="border-t border-b p-2 text-center align-middle">1, 2 & 7</td>
-      <td className="border-t border-b border-r p-4 text-center align-middle">Mon, Tue & Fri</td>
-    </tr>
-    <tr className="hover:bg-gray-100">
-      <td className="border-t border-b border-l p-2 text-center align-middle">Maths</td>
-      <td className="border-t border-b p-2 text-center align-middle">Daniel Grant</td>
-      <td className="border-t border-b p-2 text-center align-middle">6 & JHS1</td>
-      <td className="border-t border-b border-r p-6 text-center align-middle">Mon, Tue & Fri</td>
-    </tr>
-    <tr className="hover:bg-gray-100">
-      <td className="border-t border-b border-l p-2 text-center align-middle">French</td>
-      <td className="border-t border-b p-2 text-center align-middle">Daniel Grant</td>
-      <td className="border-t border-b p-2 text-center align-middle">1, 2 & 4</td>
-      <td className="border-t border-b border-r p-4 text-center align-middle">Mon, Tue & Fri</td>
-    </tr>
-    <tr className="hover:bg-gray-100">
-      <td className="border-t border-b border-l p-4 text-center align-middle">Science</td>
-      <td className="border-t border-b p-2 text-center align-middle">Daniel Grant</td>
-      <td className="border-t border-b p-2 text-center align-middle">6 & JHS1</td>
-      <td className="border-t border-b border-r p-2 text-center align-middle">Mon, Tue & Fri</td>
-    </tr>
-    <tr className="hover:bg-gray-100">
-      <td className="border-t border-b border-l p-2 text-center align-middle">Arts</td>
-      <td className="border-t border-b p-2 text-center align-middle">Daniel Grant</td>
-      <td className="border-t border-b p-2 text-center align-middle">1, 2 & 4</td>
-      <td className="border-t border-b border-r p-4 text-center align-middle">Mon, Tue & Fri</td>
-    </tr>
-  </tbody>
-</table>
-
+              <thead>
+                <tr className='text-red-500 text-xl'>
+                  <th className="border-t border-b border-l p-2 pb-6 text-center">Subject Name</th>
+                  <th className="border-t border-b p-2 pb-6 text-center">Teacher</th>
+                  <th className="border-t border-b p-2 pb-6 text-center">Classes</th>
+                  <th className="border-t border-b border-r p-2 pb-6 text-center">Days</th>
+                </tr>
+              </thead>
+              <tbody>
+                {subjects.length > 0 ? (
+                  subjects.map((subject) => (
+                    <tr className="hover:bg-gray-100" key={subject.id}>
+                      <td className="border-t border-b border-l p-2 text-center align-middle">{subject.Name}</td>
+                      <td className="border-t border-b p-2 text-center align-middle">{subject.teacher.firstName} {subject.teacher.lastName}</td>
+                      <td className="border-t border-b p-2 text-center align-middle">{subject.Classes}</td>
+                      <td className="border-t border-b border-r p-2 text-center align-middle">{subject.Days}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="4" className="text-center p-4">No subjects found</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           )}
           <div className="flex justify-end mt-4">
             <button className="py-2 px-4 border rounded-lg">Previous</button>
@@ -117,7 +100,6 @@ const SubjectComponent = () => {
             <button className="py-2 px-4 border rounded-lg">Next</button>
           </div>
         </div>
-
 
 
            <div className=" bg-gray-100 mt-8 p">

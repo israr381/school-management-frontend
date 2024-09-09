@@ -21,10 +21,10 @@ import SubjectComponent from "../subjects/subjects"
 import AccountSettings from "../Setting/AccountSetting"
 
 
-
 const Sidebar = () => {
   const [active, setActive] = useState(null);
   const [hovered, setHovered] = useState(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const components = [
     <DashboardComponent />,
@@ -44,15 +44,16 @@ const Sidebar = () => {
 
   const handleMenuClick = (index) => {
     setActive(index);
+    setIsMenuOpen(false);  // Close menu on mobile after selection
   };
 
   return (
     <div className="flex">
-      <div className="fixed bg-blue-900 text-white w-64 min-h-screen overflow-y-auto">
+      <div className={`fixed bg-blue-900 text-white w-48 md:w-64 min-h-screen overflow-y-auto transition-transform duration-300 ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
         <div className="bg-red-600 flex py-4">
-          <img src={schoolLogo} alt="Logo" className="h-10 w-10 ml-6" />
-          <div className='flex justify-end px-6 flex-1'>
-            <BiMenuAltLeft size={"35"} className="cursor-pointer hover:text-orange-400" />
+          <img src={schoolLogo} alt="Logo" className="h-8 w-8 ml-4 md:h-10 md:w-10" /> {/* Smaller size for smaller screens */}
+          <div className='flex justify-end px-4 md:px-6 flex-1 md:hidden'>
+            <BiMenuAltLeft size={"30"} className="cursor-pointer hover:text-orange-400" onClick={() => setIsMenuOpen(!isMenuOpen)} />
           </div>
         </div>
 
@@ -82,13 +83,13 @@ const Sidebar = () => {
         ].map((item, index) => (
           <div key={index} onMouseEnter={() => setHovered(index)} onMouseLeave={() => setHovered(null)}>
             <div
-              className={`mt-2 p-3 cursor-pointer ${active === item.componentIndex ? 'bg-blue-800' : 'bg-blue-700'} hover:bg-blue-800`}
+              className={`mt-2 p-2 md:p-3 cursor-pointer ${active === item.componentIndex ? 'bg-blue-800' : 'bg-blue-700'} hover:bg-blue-800`}
               onClick={() => !item.subItems && handleMenuClick(item.componentIndex)}
             >
               <div className='flex items-center justify-between'>
                 <div className='flex items-center'>
-                  <item.Icon className='text-3xl' />
-                  <h4 className='px-2 text-lg'>{item.name}</h4>
+                  <item.Icon className='text-2xl md:text-3xl' /> {/* Adjusted icon size */}
+                  <h4 className='px-2 text-sm md:text-lg'>{item.name}</h4> {/* Adjusted text size */}
                 </div>
                 {item.subItems && (hovered === index ? <FaAngleDown /> : <FaAngleRight />)}
               </div>
@@ -98,10 +99,10 @@ const Sidebar = () => {
                 {item.subItems.map((subItem, subIndex) => (
                   <div
                     key={subIndex}
-                    className={`mt-2 p-3 cursor-pointer ${active === subItem.componentIndex ? 'bg-blue-800' : 'bg-blue-600'} hover:bg-blue-800`}
+                    className={`mt-1 p-2 md:p-3 cursor-pointer ${active === subItem.componentIndex ? 'bg-blue-800' : 'bg-blue-600'} hover:bg-blue-800`}
                     onClick={() => handleMenuClick(subItem.componentIndex)}
                   >
-                    <h4 className='text-lg'>{subItem.name}</h4>
+                    <h4 className='text-sm md:text-lg'>{subItem.name}</h4> {/* Adjusted text size */}
                   </div>
                 ))}
               </div>
@@ -110,7 +111,10 @@ const Sidebar = () => {
         ))}
       </div>
       
-      <div className="flex-1 p-4 ml-64 overflow-y-auto">
+      <div className="flex-1 p-4 md:ml-64 ml-0">
+        <div className='md:hidden '>
+          <BiMenuAltLeft size={"30"} className="cursor-pointer" onClick={() => setIsMenuOpen(!isMenuOpen)} />
+        </div>
         {components[active !== null ? active : 0]}
       </div>
     </div>
